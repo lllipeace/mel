@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halloween Office Party Countdown</title>
+
+    <!-- Подключение GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.4/gsap.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Oswald', sans-serif;
+            background-color: black;
+            color: white;
+            text-align: center;
+            background-size: cover;
+            background-position: center;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Таймер */
+        #timer {
+            font-size: 80px;
+            color: white;
+            text-shadow: 0 0 10px #FFF, 0 0 20px #FFF;
+            margin-top: 30px;
+        }
+
+        h1, h2, p {
+            margin: 0;
+            color: #FF4500;
+            text-shadow: 0 0 10px #FF4500, 0 0 20px #FF4500;
+        }
+
+        h1 {
+            font-size: 50px;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 100px;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 30px;
+            margin-top: 10px;
+        }
+
+        /* Летучие мыши */
+        .bat {
+            position: absolute;
+            width: 30px;
+            height: auto;
+            opacity: 0;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            h1 { font-size: 40px; }
+            h2 { font-size: 70px; }
+            p { font-size: 20px; }
+            #timer { font-size: 60px; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Ты же помнишь, что до</h1>
+    <h2>HALLOWEEN OFFICE PARTY</h2>
+    <p>Осталось:</p>
+
+    <!-- Таймер -->
+    <div id="timer"></div>
+
+    <!-- Летучие мыши -->
+    <div id="bats-container"></div>
+
+    <!-- GSAP анимации -->
+    <script>
+        // Создание множества летучих мышей со встроенным SVG-кодом
+        const batsContainer = document.getElementById('bats-container');
+        const numberOfBats = 30; // Количество летучих мышей
+
+        for (let i = 0; i < numberOfBats; i++) {
+            const bat = document.createElement('div');
+            bat.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" fill="white" width="30" height="20">
+                <path d="M96 416L59.2 346.9C22.8 363.3 0 400.1 0 442.7V512H112C112 462.7 107.5 417.6 96 416zM640 442.7C640 400.1 617.2 363.3 580.8 346.9L544 416C532.5 417.6 528 462.7 528 512H640V442.7zM403.5 307.5C397.9 297.4 389.5 289.7 379.2 285.7L368 281.3 375.1 267.9 448 128 400 112 344 208 320 64 288 96 256 64 232 208 176 112 128 128 200.9 267.9 208 281.3 196.8 285.7C186.5 289.7 178.1 297.4 172.5 307.5L128 384 176 400 224 320 304 400 336 384 368 400 448 320 496 400 544 384 499.5 307.5z"/>
+                </svg>`;
+            bat.classList.add('bat');
+            batsContainer.appendChild(bat);
+        }
+
+        // Анимация летучих мышей
+        function animateBats() {
+            gsap.utils.toArray(".bat").forEach(bat => {
+                gsap.to(bat, {
+                    duration: gsap.utils.random(2, 5),
+                    x: gsap.utils.random(-100, 100) + "vw",
+                    y: gsap.utils.random(-100, 100) + "vh",
+                    opacity: 1,
+                    repeat: -1,
+                    yoyo: true,
+                    ease: "power1.inOut",
+                    delay: gsap.utils.random(0, 5),
+                });
+            });
+        }
+
+        // Запуск анимации летучих мышей
+        animateBats();
+
+        // Таймер обратного отсчета
+        const countdownDate = new Date("Oct 31, 2024 16:00:00").getTime();
+
+        const timer = setInterval(function() {
+            const now = new Date().getTime();
+            const distance = countdownDate - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("timer").innerHTML = 
+                days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+
+            if (distance < 0) {
+                clearInterval(timer);
+                document.getElementById("timer").innerHTML = "Event Started!";
+            }
+        }, 1000);
+    </script>
+
+</body>
+</html>
